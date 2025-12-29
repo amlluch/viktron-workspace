@@ -79,13 +79,7 @@
           }
         },
         "test": {
-          "builder": "@angular/build:unit-test",
-          "options": {
-            "tsConfig": "projects/web/tsconfig.spec.json",
-            "include": [
-              "projects/web/src/**/*.spec.ts",
-              "projects/web/src/**/*.d.ts"
-            ]
+          "builder": "@angular/build:unit-test"
         }
       }
     },
@@ -162,7 +156,11 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "tsConfig": "projects/feature-hello/tsconfig.spec.json"
+            "tsConfig": "projects/feature-hello/tsconfig.spec.json",
+            "include": [
+              "projects/feature-hello/src/**/*.spec.ts",
+              "projects/feature-hello/src/**/*.d.ts"
+            ]
           }
         }
       }
