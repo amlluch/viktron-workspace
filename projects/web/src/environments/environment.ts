@@ -9,5 +9,8 @@ export const environment = {
     redirectUri: 'http://localhost:4200/auth/callback',
     logoutUri: 'http://localhost:4200/',
     scopes: 'openid email profile',
+    region: 'eu-west-1',
+    userPoolId: 'eu-west-1_JZ9B0hbze',
+    userPoolClientId: '6u08ffec5jfgq2caqcbs13lg8c',
   },
 };
