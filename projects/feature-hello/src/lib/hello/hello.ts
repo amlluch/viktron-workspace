@@ -19,7 +19,7 @@ export class Hello {
     this.message = this.greeting.getGreeting('Alfonso');
   }
 
-  logout(): void {
+  async logout(): Promise<void> {
     this.auth.logout();
   }
 }
