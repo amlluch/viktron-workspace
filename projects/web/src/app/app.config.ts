@@ -18,16 +18,11 @@ export const appConfig: ApplicationConfig = {
     {
       provide: AUTH_CONFIG,
       useValue: {
-        cognitoDomain:
-          (environment.cognito as any).domain ??
-          `${(environment.cognito as any).domainPrefix}.auth.${environment.cognito.region}.amazoncognito.com`,
-
+        cognitoDomain: environment.cognito.domain,
         clientId: environment.cognito.userPoolClientId,
-
         redirectUri: `${window.location.origin}/auth/callback`,
         logoutUri: `${window.location.origin}/`,
-
-        scopes: 'openid email profile',
+        scopes: environment.cognito.scopes ?? 'openid email profile',
       },
     },
 

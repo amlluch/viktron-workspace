@@ -25,9 +25,9 @@ jobs:
         run: |
           set -euo pipefail
           if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
-            echo "env=prod" >> "$GITHUB_OUTPUT"
+            echo "env=production" >> "$GITHUB_OUTPUT"
           else
-            echo "env=dev" >> "$GITHUB_OUTPUT"
+            echo "env=development" >> "$GITHUB_OUTPUT"
           fi
 
   build:
@@ -48,7 +48,7 @@ jobs:
         run: npm test --if-present
 
       - name: Build (web)
-        run: npx ng build web
+        run: npx ng build web --configuration ${{ needs.meta.outputs.env }}
 
       - name: Upload dist
         uses: actions/upload-artifact@v4
