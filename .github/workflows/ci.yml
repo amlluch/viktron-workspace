@@ -17,17 +17,26 @@ jobs:
   meta:
     runs-on: ubuntu-latest
     outputs:
-      env: ${{ steps.out.outputs.env }}
+      # GitHub Environments (must match what you created in repo settings)
+      deploy_env: ${{ steps.out.outputs.deploy_env }}
+
+      # Angular build configuration
+      ng_config: ${{ steps.out.outputs.ng_config }}
+
     steps:
       - uses: actions/checkout@v4
+
       - id: out
         shell: bash
         run: |
           set -euo pipefail
+
           if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
-            echo "env=production" >> "$GITHUB_OUTPUT"
+            echo "deploy_env=prod" >> "$GITHUB_OUTPUT"
+            echo "ng_config=production" >> "$GITHUB_OUTPUT"
           else
-            echo "env=development" >> "$GITHUB_OUTPUT"
+            echo "deploy_env=dev" >> "$GITHUB_OUTPUT"
+            echo "ng_config=development" >> "$GITHUB_OUTPUT"
           fi
 
   build:
@@ -48,7 +57,7 @@ jobs:
         run: npm test --if-present
 
       - name: Build (web)
-        run: npx ng build web --configuration ${{ needs.meta.outputs.env }}
+        run: npx ng build web --configuration ${{ needs.meta.outputs.ng_config }}
 
       - name: Upload dist
         uses: actions/upload-artifact@v4
@@ -59,7 +68,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: [meta, build]
-    environment: ${{ needs.meta.outputs.env }}
+
+    # IMPORTANT: this must match your GitHub Environment name: dev / prod
+    environment: ${{ needs.meta.outputs.deploy_env }}
+
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -76,7 +88,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+
           bucket="${{ vars.S3_SITE_BUCKET }}"
+          if [[ -z "$bucket" ]]; then
+            echo "S3_SITE_BUCKET is empty. Check GitHub Environment variables for environment '${{ needs.meta.outputs.deploy_env }}'."
+            exit 1
+          fi
 
           web_dir="$(find dist -maxdepth 3 -type d -name browser | head -n 1 || true)"
           if [[ -z "$web_dir" ]]; then
