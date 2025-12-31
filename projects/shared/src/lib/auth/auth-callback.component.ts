@@ -22,17 +22,19 @@ export class AuthCallbackComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
+    const oauthError = this.route.snapshot.queryParamMap.get('error');
+    const oauthErrorDesc = this.route.snapshot.queryParamMap.get('error_description');
+
+    if (oauthError) {
+      this.error = `${oauthError}${oauthErrorDesc ? `: ${oauthErrorDesc}` : ''}`;
+      return;
+    }
+
     const code = this.route.snapshot.queryParamMap.get('code');
     const state = this.route.snapshot.queryParamMap.get('state');
-
-    try {
-      await this.auth.handleCallback(code, state);
-
-      const target = this.auth.isAdmin() ? '/admin/users' : '/hello';
-      await this.router.navigateByUrl(target);
-    } catch (e: any) {
-      this.error = e?.message ?? String(e);
-      // await this.router.navigateByUrl('/login');
+    if (!code || !state) {
+      this.error = 'Missing code/state';
+      return;
     }
   }
 }
