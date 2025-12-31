@@ -66,33 +66,27 @@
               "extractLicenses": false,
               "sourceMap": true,
               "outputHashing": "none"
-            },
-            "local": {
-              "optimization": false,
-              "extractLicenses": false,
-              "sourceMap": true,
-              "outputHashing": "none"
             }
           },
           "defaultConfiguration": "development"
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "proxyConfig": "projects/web/proxy.conf.json"
+          },
           "configurations": {
-            "production": {
-              "buildTarget": "web:build:production"
+            "local": {
+              "buildTarget": "web:build"
             },
             "development": {
               "buildTarget": "web:build:development"
             },
-            "local": {
-              "buildTarget": "web:build:local"
+            "production": {
+              "buildTarget": "web:build:production"
             }
           },
-          "defaultConfiguration": "local",
-          "options": {
-            "proxyConfig": "projects/web/proxy.conf.json"
-          }
+          "defaultConfiguration": "local"
         },
         "test": {
           "builder": "@angular/build:unit-test",
