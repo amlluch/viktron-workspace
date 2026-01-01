@@ -47,10 +47,10 @@
                   "with": "projects/web/src/environments/environment.dev.ts"
                 }
               ],
-              "optimization": false,
-              "extractLicenses": false,
-              "sourceMap": true,
-              "outputHashing": "none"
+              "optimization": true,
+              "extractLicenses": true,
+              "sourceMap": false,
+              "outputHashing": "all"
             },
             "production": {
               "fileReplacements": [
