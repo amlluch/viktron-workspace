@@ -14,7 +14,6 @@ export class LoginRedirectComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     console.log('[login] init');
 
-    // If we already have a valid session, go to the right landing page
     if (this.auth.isAuthenticated()) {
       const target = this.auth.isAdmin() ? '/admin/users' : '/hello';
       console.log('[login] already authenticated ->', target);
@@ -23,6 +22,6 @@ export class LoginRedirectComponent implements OnInit {
     }
 
     console.log('[login] not authenticated -> redirect to Cognito');
-    this.auth.startLogin(); // hard redirect
+    await this.auth.startLogin(); // hard redirect
   }
 }
